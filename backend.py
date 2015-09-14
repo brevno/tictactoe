@@ -67,12 +67,13 @@ class Game:
         game.register_online()
 
         # assign this game to all players in lobby
-        ns_name, room = '/tictactoe', 'lobby'
+        ns_name, room = '/tictactoe/wait', 'lobby'
         for client in socketio.rooms.get(ns_name, {}).get(room, set()):
             sid = client.session.get('sid')
             ServerSessionStorage(sid)['game'] = game
+        ServerSessionStorage()['game'] = game
 
-        socketio.emit('game started', namespace='/tictactoe', room='lobby')
+        socketio.emit('game started', namespace='/tictactoe/wait', room='lobby')
         socketio.close_room('lobby')
 
 
@@ -136,7 +137,7 @@ def wait():
         # this player logged first; wait for opponent
         waiting_player = player
         return render_template('wait.html', username=player.username)
-    elif player.uid == waiting_player.uid:
+    elif player == waiting_player:
         # ordinary page refresh
         return render_template('wait.html', username=player.username)
     elif waiting_player.username == player.username:
