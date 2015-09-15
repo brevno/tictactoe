@@ -3,17 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="/static/TicTacToe.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body>
-    <div class="players-info">
-        <p>Player 1: {{ game.player_a }}</p>
-        <p>Player 2: {{ game.player_b }}</p>
+<body ng-app="TicTacToe">
+<div class="players-info">
+    <p>Player 1: {{ game.player_a }}</p>
+
+    <p>Player 2: {{ game.player_b }}</p>
+</div>
+<div class="info" ng-controller="ctrlInfo" ng-init="myName = '{{ myName }}'">
+    <p ng-show="!gameOver && (turn == myName)">Your turn!</p>
+    <div ng-show="gameOver">
+        <h3 ng-show="winner === myName">You win!</h3>
+        <h3 ng-show="(winner !== myName) && (winner !== null)">You lose!</h3>
+        <h3 ng-show="winner === null">Game drawn!</h3>
     </div>
-    <div id="r1"></div>
-    <div id="r2"></div>
-    <div id="r3"></div>
+</div>
+<div class="field" ng-controller="ctrlField">
+    <table>
+        <tr ng-repeat="r in field track by $index" id="r_{{ '$index + 1'|angular }}" ng-init="rowIndex = $index">
+            <td class="cell"
+                ng-repeat="c in r track by $index"
+                id="cell_{{ rowIndex }}_{{ '$index + 1'|angular}}"
+                ng-click="clickCell(rowIndex, $index)"
+                ng_bind="cellData(rowIndex, $index)"/>
+        </tr>
+    </table>
+</div>
+<div id="board">
+</div>
 </body>
 </html>
